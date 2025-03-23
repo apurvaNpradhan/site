@@ -1,5 +1,5 @@
-import { CustomMDX } from "@/components/mdx";
-import { getBlogPosts } from "@/utils/blog";
+import { CustomMDX } from '@/components/mdx';
+import { getBlogPosts } from '@/utils/blog';
 
 export default async function Page({
   params,
@@ -7,7 +7,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  let post = getBlogPosts().find((post) => post.slug === slug);
+  const post = getBlogPosts().find((post) => post.slug === slug);
 
   return (
     <div>

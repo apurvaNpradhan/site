@@ -1,64 +1,88 @@
-import React, { ComponentPropsWithoutRef } from "react";
-import Link from "next/link";
-import { highlight } from "sugar-high";
-import { MDXRemote } from "next-mdx-remote/rsc";
-type HeadingProps = ComponentPropsWithoutRef<"h1">;
-type ParagraphProps = ComponentPropsWithoutRef<"p">;
-type ListProps = ComponentPropsWithoutRef<"ul">;
-type ListItemProps = ComponentPropsWithoutRef<"li">;
-type AnchorProps = ComponentPropsWithoutRef<"a">;
-type BlockquoteProps = ComponentPropsWithoutRef<"blockquote">;
+import React, { ComponentPropsWithoutRef } from 'react';
+import Link from 'next/link';
+import { highlight } from 'sugar-high';
+import { MDXRemote } from 'next-mdx-remote/rsc';
+import Image, { type ImageProps } from 'next/image';
+
+type HeadingProps = ComponentPropsWithoutRef<'h1'>;
+type ParagraphProps = ComponentPropsWithoutRef<'p'>;
+type ListProps = ComponentPropsWithoutRef<'ul'>;
+type ListItemProps = ComponentPropsWithoutRef<'li'>;
+type AnchorProps = ComponentPropsWithoutRef<'a'>;
+type BlockquoteProps = ComponentPropsWithoutRef<'blockquote'>;
 
 const components = {
+  Image: (props: ImageProps) => (
+    <Image
+      className='rounded-md border border-gray-200 dark:border-zinc-700'
+      {...props}
+    />
+  ),
   h1: (props: HeadingProps) => (
-    <h1 className="font-medium pt-12 mb-0" {...props} />
+    <h1
+      className='mt-12 mb-4 text-3xl font-semibold tracking-tight text-gray-900 dark:text-gray-100'
+      {...props}
+    />
   ),
   h2: (props: HeadingProps) => (
     <h2
-      className="text-gray-800 dark:text-zinc-200 font-medium mt-8 mb-3"
+      className='mt-10 mb-3 text-2xl font-semibold tracking-tight text-gray-800 dark:text-gray-200'
       {...props}
     />
   ),
   h3: (props: HeadingProps) => (
     <h3
-      className="text-gray-800 dark:text-zinc-200 font-medium mt-8 mb-3"
+      className='mt-8 mb-3 text-xl font-medium tracking-tight text-gray-800 dark:text-gray-200'
       {...props}
     />
   ),
-  h4: (props: HeadingProps) => <h4 className="font-medium" {...props} />,
+  h4: (props: HeadingProps) => (
+    <h4
+      className='mt-6 mb-2 text-lg font-medium tracking-tight text-gray-700 dark:text-gray-300'
+      {...props}
+    />
+  ),
   p: (props: ParagraphProps) => (
-    <p className="text-gray-800 dark:text-zinc-300 leading-snug" {...props} />
+    <p
+      className='my-4 leading-relaxed tracking-tight text-gray-700 dark:text-gray-300'
+      {...props}
+    />
   ),
   ol: (props: ListProps) => (
     <ol
-      className="text-gray-800 dark:text-zinc-300 list-decimal pl-5 space-y-2"
+      className='my-4 list-decimal space-y-2 pl-6 text-gray-700 dark:text-gray-300'
       {...props}
     />
   ),
   ul: (props: ListProps) => (
     <ul
-      className="text-gray-800 dark:text-zinc-300 list-disc pl-5 space-y-1"
+      className='my-4 list-disc space-y-1 pl-6 text-gray-700 dark:text-gray-300'
       {...props}
     />
   ),
-  li: (props: ListItemProps) => <li className="pl-1" {...props} />,
-  em: (props: ComponentPropsWithoutRef<"em">) => (
-    <em className="font-medium" {...props} />
+  li: (props: ListItemProps) => (
+    <li className='pl-1 tracking-wide' {...props} />
   ),
-  strong: (props: ComponentPropsWithoutRef<"strong">) => (
-    <strong className="font-medium" {...props} />
+  em: (props: ComponentPropsWithoutRef<'em'>) => (
+    <em className='text-gray-600 italic dark:text-gray-400' {...props} />
+  ),
+  strong: (props: ComponentPropsWithoutRef<'strong'>) => (
+    <strong
+      className='font-semibold text-gray-800 dark:text-gray-200'
+      {...props}
+    />
   ),
   a: ({ href, children, ...props }: AnchorProps) => {
     const className =
-      "text-blue-500 hover:text-blue-700 dark:text-gray-400 hover:dark:text-gray-300 dark:underline dark:underline-offset-2 dark:decoration-gray-800";
-    if (href?.startsWith("/")) {
+      'text-blue-400 hover:text-blue-500 dark:text-blue-300 dark:hover:text-blue-300 transition-colors duration-200 tracking-wide underline underline-offset-4 decoration-1';
+    if (href?.startsWith('/')) {
       return (
         <Link href={href} className={className} {...props}>
           {children}
         </Link>
       );
     }
-    if (href?.startsWith("#")) {
+    if (href?.startsWith('#')) {
       return (
         <a href={href} className={className} {...props}>
           {children}
@@ -68,33 +92,51 @@ const components = {
     return (
       <a
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={className}
+        target='_blank'
+        rel='noopener noreferrer'
+        className={`${className} relative after:ml-1 after:text-sm after:content-['↗']`}
         {...props}
       >
         {children}
       </a>
     );
   },
-  code: ({ children, ...props }: ComponentPropsWithoutRef<"code">) => {
-    const codeHTML = highlight(children as string);
-    return <code dangerouslySetInnerHTML={{ __html: codeHTML }} {...props} />;
+  code: ({ children, ...props }: ComponentPropsWithoutRef<'code'>) => {
+    const codeHTML = highlight(children as string, {
+      language: 'tsx',
+    });
+    return (
+      <code
+        className='rounded-md bg-gray-100 px-1.5 py-0.5 font-mono text-sm tracking-tight text-red-600 dark:bg-zinc-800 dark:text-red-400'
+        dangerouslySetInnerHTML={{ __html: codeHTML }}
+        {...props}
+      />
+    );
   },
   Table: ({ data }: { data: { headers: string[]; rows: string[][] } }) => (
-    <table>
+    <table className='my-6 w-full border-collapse text-gray-700 dark:text-gray-300'>
       <thead>
-        <tr>
+        <tr className='border-b border-gray-200 dark:border-zinc-700'>
           {data.headers.map((header, index) => (
-            <th key={index}>{header}</th>
+            <th
+              key={index}
+              className='px-4 py-2 text-left font-medium tracking-wide'
+            >
+              {header}
+            </th>
           ))}
         </tr>
       </thead>
       <tbody>
         {data.rows.map((row, index) => (
-          <tr key={index}>
+          <tr
+            key={index}
+            className='border-b border-gray-100 dark:border-zinc-800'
+          >
             {row.map((cell, cellIndex) => (
-              <td key={cellIndex}>{cell}</td>
+              <td key={cellIndex} className='px-4 py-2 tracking-wide'>
+                {cell}
+              </td>
             ))}
           </tr>
         ))}
@@ -103,7 +145,7 @@ const components = {
   ),
   blockquote: (props: BlockquoteProps) => (
     <blockquote
-      className="ml-[0.075em] border-l-3 border-gray-300 pl-4 text-gray-700 dark:border-zinc-600 dark:text-zinc-300"
+      className='my-4 border-l-4 border-gray-200 pl-4 tracking-wide text-gray-600 italic dark:border-zinc-700 dark:text-gray-400'
       {...props}
     />
   ),
@@ -116,6 +158,7 @@ declare global {
 export function useMDXComponents(): MDXProvidedComponents {
   return components;
 }
+
 export function CustomMDX(props) {
   return (
     <MDXRemote
